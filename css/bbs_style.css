@@ -1,0 +1,94 @@
+@import url(reset.css);
+body {
+    padding: 100px 0;
+}
+/* board style */
+.board_area {
+    width: 80%;
+    margin: 0 auto;
+}
+.col1 {
+    width: 70px;
+}
+.col2 {
+    width: 500px;
+}
+.col3 {
+    width: 120px;
+}
+.col4 {
+    width: 100px;
+}
+.list-table {
+    width: 100%;
+    margin-top: 30px;
+}
+.board_area thead {
+    border-bottom: 2px solid #ccc;
+}
+.board_area th,
+.board_area td {
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.board_area th,
+td {
+    padding: 10px 0;
+}
+.board_btns {
+    margin-top: 30px;
+}
+
+dialog {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+}
+dialog[open] {
+    opacity: 1;
+    visibility: visible;
+}
+dialog form {
+    background: #fff;
+    padding: 50px;
+    border-radius: 10px;
+    max-width: 300px;
+    width: 80%;
+}
+.pagination {
+    margin-top: 30px;
+}
+.pagination ul {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.pagination ul li a {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background: #ebebeb;
+    color: #000;
+    display: block;
+    text-decoration: none;
+}
+.pagination ul li a.active {
+    background: #3498db;
+    color: #ccc;
+}
+.pagination ul li a.button {
+    width: 60px;
+}
