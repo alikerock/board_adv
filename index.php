@@ -12,7 +12,7 @@
     //print_r($page_row['cnt']);
     $row_num = $page_row['cnt']; //전체 게시물 수
 
-    $list = 5; //페이지당 출력할 게시물 수
+    $list = 10; //페이지당 출력할 게시물 수
     $block_ct = 5;
     $block_num = ceil($page/$block_ct);//page9,  9/5 1.2 2
     $block_start = (($block_num -1)*$block_ct) + 1;//page6 start 6
