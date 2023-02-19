@@ -82,8 +82,8 @@
                         $rc ='';
                     }
 
-                    if(mb_strlen($title) > 10){
-                        $title = str_replace($row['title'],mb_substr($row['title'], 0, 10)."...",$row['title']);
+                    if(iconv_strlen($title) > 10){
+                        $title = str_replace($row['title'],iconv_strlen($row['title'], 0, 10)."...",$row['title']);
                     } 
                 ?>
                 <tr>
