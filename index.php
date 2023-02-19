@@ -83,7 +83,7 @@
                     }
 
                     if(iconv_strlen($title) > 10){
-                        $title = str_replace($row['title'],iconv_strlen($row['title'], 0, 10)."...",$row['title']);
+                        $title = str_replace($row['title'],iconv_substr($row['title'], 0, 10)."...",$row['title']);
                     } 
                 ?>
                 <tr>
