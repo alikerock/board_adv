@@ -1,28 +1,5 @@
 <?php 
     include $_SERVER['DOCUMENT_ROOT']."/bbs/inc/db.php";
-    
-    if(isset($_GET['page'])){
-        $page = $_GET['page'];
-    } else {
-        $page = 1;
-    }
-    $pagesql = "SELECT COUNT(*) as cnt from board";
-    $page_result = $conn->query($pagesql);
-    $page_row = $page_result->fetch_assoc();
-    //print_r($page_row['cnt']);
-    $row_num = $page_row['cnt']; //전체 게시물 수
-
-    $list = 5; //페이지당 출력할 게시물 수
-    $block_ct = 5;
-    $block_num = ceil($page/$block_ct);//page9,  9/5 1.2 2
-    $block_start = (($block_num -1)*$block_ct) + 1;//page6 start 6
-    $block_end = $block_start + $block_ct -1; //start 1, end 5
-
-    $total_page = ceil($row_num/$list); //총42, 42/5
-    if($block_end > $total_page) $block_end = $total_page;
-    $total_block = ceil($total_page/$block_ct);//총32, 2
-
-    $start_num = ($page -1) * $list;
 
     $category = $_GET['search_cat'];
     $keyword = $_GET['search'];
@@ -35,6 +12,28 @@
     if($category == "content"){
         $catname = "내용";
     }
+
+    $page = $_GET['page'] ?? 1;
+    $pagesql = "SELECT COUNT(*) AS cnt FROM board WHERE $category LIKE '%$keyword%' order by idx desc";
+    $page_result = $conn->query($pagesql);
+    $page_row = $page_result->fetch_assoc();
+    print_r($page_row['cnt']);
+    $row_num = $page_row['cnt']; //전체 게시물 수
+    
+
+    $list = 10; //페이지당 출력할 게시물 수
+    $block_ct = 5;
+    $block_num = ceil($page/$block_ct);//page9,  9/5 1.2 2
+    $block_start = (($block_num -1)*$block_ct) + 1;//page6 start 6
+    $block_end = $block_start + $block_ct -1; //start 1, end 5
+
+    $total_page = ceil($row_num/$list); //총42, 42/5
+    if($block_end > $total_page) $block_end = $total_page;
+    $total_block = ceil($total_page/$block_ct);//총32, 2
+
+    $start_num = ($page -1) * $list;
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,14 +42,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../../css/bbs_style.css">
 </head>
 <body>
-    <div class="board_area">
-        <h1>자유게시판</h1>
-        <h2><?php echo $catname; ?>: <?php echo $keyword; ?>검색 결과</h2>
-        <table class="list-table">
+<div class="container">
+        <h1><a href="../../index.php">자유게시판</a></h1>
+        <h2><?php echo $catname; ?>: <?php echo $keyword; ?>검색 결과<?php echo $row_num; ?></h2>
+        <table class="table table-hover">
             <colgroup>
                 <col class="col1">
                 <col class="col2">
@@ -73,7 +73,7 @@
                 <?php                    
 
 
-                    $sql = "SELECT * from board where $category like '%$keyword%' order by idx desc";
+                    $sql = "SELECT * from board where $category like '%$keyword%' order by idx desc limit $start_num,$list";
                     $result = $conn->query($sql);
                     while($row = $result->fetch_assoc()){   
                     $title = $row['title'];
@@ -128,7 +128,35 @@
                 <?php } ?>
             </tbody>            
         </table>
+        <div class="pagination">
+            <ul>
+                <?php
+                    if($page>1){                   
+                        echo '<li><a href="?search_cat='.urlencode($category).'&search='.urlencode($keyword).'&page=1" class="button">이전</a></li>';
+                        if($block_num > 1){
+                            $prev = ($block_num-2)*$list + 1;
+                            echo '<li><a href="?search_cat='.urlencode($category).'&search='.urlencode($keyword).'&page='.$prev.'" class="button">이전</a></li>';
+                        }
+                    }
 
+                    for($i=$block_start;$i<=$block_end;$i++){
+                        if($page == $i){
+                            echo '<li><a href="?search_cat='.urlencode($category).'&search='.urlencode($keyword).'&page='.$i.'" class="active">'.$i.'</a></li>';
+                        }else{
+                            echo '<li><a href="?search_cat='.urlencode($category).'&search='.urlencode($keyword).'&page='.$i.'">'.$i.'</a></li>';
+                        }
+                    }
+
+                if($page<$total_page){
+                    if($total_block > $block_num){
+                        $next = $block_num*$list + 1;
+                        echo '<li><a href="?search_cat='.urlencode($category).'&search='.urlencode($keyword).'&page='.$next.'" class="button">다음</a></li>';
+                    }
+                    echo '<li><a href="?search_cat='.urlencode($category).'&search='.urlencode($keyword).'&page='.$total_page.'" class="button">마지막</a></li>';
+                }
+                ?>
+            </ul>
+        </div>
         <div class="search_form">
             <form action="search_result.php" method="get">
                 <select name="search_cat" id="">
