@@ -32,15 +32,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시판</title>
+    <title>질문 게시판</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./css/bbs_style.css">
 </head>
 <body>
-    <div class="board_area">
-        <h1>자유게시판</h1>
+    <div class="container">
+        <h1>질문 게시판</h1>
 
-        <table class="list-table">
+        <table class="table table-hover">
             <colgroup>
                 <col class="col1">
                 <col class="col2">
@@ -82,8 +83,8 @@
                         $rc ='';
                     }
 
-                    if(iconv_strlen($title) > 10){
-                        $title = str_replace($row['title'],iconv_substr($row['title'], 0, 10)."...",$row['title']);
+                    if(mb_strlen($title) > 10){
+                        $title = str_replace($row['title'],mb_substr($row['title'], 0, 10)."...",$row['title']);
                     } 
                 ?>
                 <tr>
@@ -124,7 +125,7 @@
                     if($page>1){                   
                         echo "<li><a href='?page=1' class='button'>처음</a></li>";
                         if($block_num > 1){
-                            $prev = ($block_num-2)*$list + 1;
+                            $prev = ($block_num - 2) * $block_ct + 1;
                             echo "<li><a href='?page=$prev' class='button'>이전</a></li>";
                         }
                     }
@@ -139,7 +140,7 @@
 
                 if($page<$total_page){
                     if($total_block > $block_num){
-                        $next = $block_num*$list + 1;
+                        $next = $block_num * $block_ct + 1;
                         echo "<li><a href='?page=$next' class='button'>다음</a></li>";
                     }
                     echo "<li><a href='?page=$total_page' class='button'>마지막</a></li>";
@@ -148,18 +149,26 @@
             </ul>
         </div>
         <div class="search_form">
-            <form action="page/board/search_result.php" method="get">
-                <select name="search_cat" id="">
+            <form action="page/board/search_result.php" method="get" class="row">
+                <div class="col-md-3">
+                <select name="search_cat" id="" class="form-select" aria-label="Default select example">
                     <option value="title">제목</option>
                     <option value="name">글쓴이</option>
                     <option value="content">내용</option>
                 </select>
-                <input type="search" name="search" required>
-                <button>검색</button>
+                </div>
+                <div class="col-md-6">
+                    <input type="search" name="search" required class="form-control">
+                    
+                </div>
+                <div class="col-md-3">
+                <button class="btn btn-info">검색</button>
+                </div>
+                
             </form>
         </div>
         <div class="board_btns">
-            <a href="./page/board/write.php">글쓰기</a>
+            <a href="./page/board/write.php" class="btn btn-primary">글쓰기</a>
         </div>
     </div>
     <?php
