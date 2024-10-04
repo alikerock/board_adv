@@ -18,7 +18,7 @@ $tmpfile_path = $_FILES['b_file']['tmp_name'];
 $upload_path = "../../upload/".$org_name;
 $file_type =$_FILES['b_file']['type'];
 
-if(strpos($file_type,'image') >= 0) {$is_img = 1;} else{ $is_img = 0;}
+ strpos($_FILES['attach']['type'],'image') !== false ? $is_img = 1 : $is_img= 0;
 
 move_uploaded_file($tmpfile_path, $upload_path);
 
